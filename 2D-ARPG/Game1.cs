@@ -29,9 +29,9 @@ namespace _2D_ARPG
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 800;
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferWidth = 1600;
+            graphics.PreferredBackBufferHeight = 1600;
         }
 
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -139,56 +139,59 @@ namespace _2D_ARPG
         // Player movement
         private void UpdatePlayer()
         {
-            if (currentKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.S)
-                && currentKeyboardState.IsKeyUp(Keys.D))
+            if (worldmap == 1)
             {
-                if (previousKeyboardState.IsKeyUp(Keys.A) || keyRepeatTime < 0)
+                if (currentKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.S)
+                    && currentKeyboardState.IsKeyUp(Keys.D))
                 {
-                    keyRepeatTime = keyRepeatDelay;
+                    if (previousKeyboardState.IsKeyUp(Keys.A) || keyRepeatTime < 0)
+                    {
+                        keyRepeatTime = keyRepeatDelay;
 
-                    player.PlayerPosition.X -= playerMoveSpeed;
+                        player.PlayerPosition.X -= playerMoveSpeed;
+                    }
+                    else
+                        keyRepeatTime -= elapsedTime;
                 }
-                else
-                    keyRepeatTime -= elapsedTime;
-            }
 
-            if (currentKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.S) && currentKeyboardState.IsKeyUp(Keys.W)
-                && currentKeyboardState.IsKeyUp(Keys.A))
-            {
-                if (previousKeyboardState.IsKeyUp(Keys.D) || keyRepeatTime < 0)
+                if (currentKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.S) && currentKeyboardState.IsKeyUp(Keys.W)
+                    && currentKeyboardState.IsKeyUp(Keys.A))
                 {
-                    keyRepeatTime = keyRepeatDelay;
+                    if (previousKeyboardState.IsKeyUp(Keys.D) || keyRepeatTime < 0)
+                    {
+                        keyRepeatTime = keyRepeatDelay;
 
-                    player.PlayerPosition.X += playerMoveSpeed;
+                        player.PlayerPosition.X += playerMoveSpeed;
+                    }
+                    else
+                        keyRepeatTime -= elapsedTime;
                 }
-                else
-                    keyRepeatTime -= elapsedTime;
-            }
 
-            if (currentKeyboardState.IsKeyDown(Keys.W) && currentKeyboardState.IsKeyUp(Keys.A) && currentKeyboardState.IsKeyUp(Keys.S)
-                && currentKeyboardState.IsKeyUp(Keys.D))
-            {
-                if (previousKeyboardState.IsKeyUp(Keys.W) || keyRepeatTime < 0)
+                if (currentKeyboardState.IsKeyDown(Keys.W) && currentKeyboardState.IsKeyUp(Keys.A) && currentKeyboardState.IsKeyUp(Keys.S)
+                    && currentKeyboardState.IsKeyUp(Keys.D))
                 {
-                    keyRepeatTime = keyRepeatDelay;
+                    if (previousKeyboardState.IsKeyUp(Keys.W) || keyRepeatTime < 0)
+                    {
+                        keyRepeatTime = keyRepeatDelay;
 
-                    player.PlayerPosition.Y -= playerMoveSpeed;
+                        player.PlayerPosition.Y -= playerMoveSpeed;
+                    }
+                    else
+                        keyRepeatTime -= elapsedTime;
                 }
-                else
-                    keyRepeatTime -= elapsedTime;
-            }
 
-            if (currentKeyboardState.IsKeyDown(Keys.S) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.A)
-                && currentKeyboardState.IsKeyUp(Keys.D))
-            {
-                if (previousKeyboardState.IsKeyUp(Keys.S) || keyRepeatTime < 0)
+                if (currentKeyboardState.IsKeyDown(Keys.S) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.A)
+                    && currentKeyboardState.IsKeyUp(Keys.D))
                 {
-                    keyRepeatTime = keyRepeatDelay;
+                    if (previousKeyboardState.IsKeyUp(Keys.S) || keyRepeatTime < 0)
+                    {
+                        keyRepeatTime = keyRepeatDelay;
 
-                    player.PlayerPosition.Y += playerMoveSpeed;
+                        player.PlayerPosition.Y += playerMoveSpeed;
+                    }
+                    else
+                        keyRepeatTime -= elapsedTime;
                 }
-                else
-                    keyRepeatTime -= elapsedTime;
             }
 
             if (KeyPressed(Keys.Enter))
