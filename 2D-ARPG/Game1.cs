@@ -139,7 +139,7 @@ namespace _2D_ARPG
         // Player movement
         private void UpdatePlayer()
         {
-            if (worldmap == 1)  // just to make sure that you can move character only when game is activce
+            if (worldmap == 1)  // You can move only when game is active
             {
                 if (currentKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.S)
                     && currentKeyboardState.IsKeyUp(Keys.D))
