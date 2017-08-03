@@ -54,7 +54,6 @@ namespace _2D_ARPG
             int MapHeight = int.Parse(xDoc.Root.Attribute("height").Value);
             int TileCount = int.Parse(xDoc.Root.Element("tileset").Attribute("tilecount").Value);
             int Columns = int.Parse(xDoc.Root.Element("tileset").Attribute("columns").Value);
-
             string IdArray = xDoc.Root.Element("layer").Element("data").Value;
             string[] splitArray = IdArray.Split(',');
 
@@ -102,7 +101,7 @@ namespace _2D_ARPG
 
             // Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 
             //     GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-            Vector2 playerPosition = new Vector2(0, 0);
+            Vector2 playerPosition = new Vector2(128, 128);
             Rectangle playerRectangle = new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 16, 16);
             player.Initialize(Content.Load<Texture2D>("Box"), playerPosition, playerRectangle);
         }
