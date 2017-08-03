@@ -16,7 +16,7 @@ namespace _2D_ARPG
         KeyboardState currentKeyboardState;         // Current Keyboardstate used in movement
         KeyboardState previousKeyboardState;        // previous Keyboardstate used in movement
         Tile[,] tileset;                            // Multidimensional array for tiles
-        int playerMoveSpeed = 16;                   // Player movespeed
+        float playerMoveSpeed = 16;                 // Player movespeed
         int worldmap = 0;                           // Variable used for drawing woldmap
         public Texture2D TileTexture;               // Texture for tiles
         public Rectangle tileRectangle;             // Rectangle for tiles
@@ -29,9 +29,9 @@ namespace _2D_ARPG
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferWidth = 1600;
-            graphics.PreferredBackBufferHeight = 1600;
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 400;
+            graphics.PreferredBackBufferHeight = 400;
         }
 
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -102,7 +102,7 @@ namespace _2D_ARPG
 
             // Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 
             //     GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-            Vector2 playerPosition = new Vector2(128, 128);
+            Vector2 playerPosition = new Vector2(256, 256);
             Rectangle playerRectangle = new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 16, 16);
             player.Initialize(Content.Load<Texture2D>("Knight"), playerPosition, playerRectangle);
         }
@@ -147,7 +147,6 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.A) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-
                         player.PlayerPosition.X -= playerMoveSpeed;
                     }
                     else
@@ -160,8 +159,8 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.D) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-
                         player.PlayerPosition.X += playerMoveSpeed;
+                        
                     }
                     else
                         keyRepeatTime -= elapsedTime;
@@ -173,8 +172,7 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.W) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-
-                        player.PlayerPosition.Y -= playerMoveSpeed;
+                        player.PlayerPosition.Y -= playerMoveSpeed;                      
                     }
                     else
                         keyRepeatTime -= elapsedTime;
@@ -186,8 +184,7 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.S) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-
-                        player.PlayerPosition.Y += playerMoveSpeed;
+                        player.PlayerPosition.Y += playerMoveSpeed;                       
                     }
                     else
                         keyRepeatTime -= elapsedTime;
