@@ -21,16 +21,17 @@ namespace _2D_ARPG
         public Texture2D TileTexture;               // Texture for tiles
         public Rectangle tileRectangle;             // Rectangle for tiles
         float keyRepeatTime;
-        const float keyRepeatDelay = 0.2f;          // repeat rate
         float elapsedTime;
+        const float keyRepeatDelay = 0.2f;          // Repeat rate
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferWidth = 1600;
-            graphics.PreferredBackBufferHeight = 1600;
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 800;
         }
 
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -103,7 +104,7 @@ namespace _2D_ARPG
             //     GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
             Vector2 playerPosition = new Vector2(128, 128);
             Rectangle playerRectangle = new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 16, 16);
-            player.Initialize(Content.Load<Texture2D>("Box"), playerPosition, playerRectangle);
+            player.Initialize(Content.Load<Texture2D>("Knight"), playerPosition, playerRectangle);
         }
 
 
@@ -138,7 +139,8 @@ namespace _2D_ARPG
         // Player movement
         private void UpdatePlayer()
         {
-            if (currentKeyboardState.IsKeyDown(Keys.A))
+            if (currentKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.S)
+                && currentKeyboardState.IsKeyUp(Keys.D))
             {
                 if (previousKeyboardState.IsKeyUp(Keys.A) || keyRepeatTime < 0)
                 {
@@ -149,12 +151,9 @@ namespace _2D_ARPG
                 else
                     keyRepeatTime -= elapsedTime;
             }
-            //  if (KeyPressed(Keys.A))
-            //  {
-            //          
-            //  }
 
-            if (currentKeyboardState.IsKeyDown(Keys.D))
+            if (currentKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.S) && currentKeyboardState.IsKeyUp(Keys.W)
+                && currentKeyboardState.IsKeyUp(Keys.A))
             {
                 if (previousKeyboardState.IsKeyUp(Keys.D) || keyRepeatTime < 0)
                 {
@@ -166,7 +165,8 @@ namespace _2D_ARPG
                     keyRepeatTime -= elapsedTime;
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.W))
+            if (currentKeyboardState.IsKeyDown(Keys.W) && currentKeyboardState.IsKeyUp(Keys.A) && currentKeyboardState.IsKeyUp(Keys.S)
+                && currentKeyboardState.IsKeyUp(Keys.D))
             {
                 if (previousKeyboardState.IsKeyUp(Keys.W) || keyRepeatTime < 0)
                 {
@@ -178,7 +178,8 @@ namespace _2D_ARPG
                     keyRepeatTime -= elapsedTime;
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.S))
+            if (currentKeyboardState.IsKeyDown(Keys.S) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.A)
+                && currentKeyboardState.IsKeyUp(Keys.D))
             {
                 if (previousKeyboardState.IsKeyUp(Keys.S) || keyRepeatTime < 0)
                 {
