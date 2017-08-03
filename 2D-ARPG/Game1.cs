@@ -16,12 +16,13 @@ namespace _2D_ARPG
         KeyboardState currentKeyboardState;         // Current Keyboardstate used in movement
         KeyboardState previousKeyboardState;        // previous Keyboardstate used in movement
         Tile[,] tileset;                            // Multidimensional array for tiles
-        int playerMoveSpeed;                        // Player movespeed
-        int tileSize = 16;                          // Tile size 16px x 16px
+        int playerMoveSpeed = 16;                   // Player movespeed
         int worldmap = 0;                           // Variable used for drawing woldmap
         public Texture2D TileTexture;               // Texture for tiles
         public Rectangle tileRectangle;             // Rectangle for tiles
-
+        float keyRepeatTime;
+        const float keyRepeatDelay = 0.2f;          // repeat rate
+        float elapsedTime;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -41,12 +42,10 @@ namespace _2D_ARPG
             // TODO: Add your initialization logic here
             // Initializing player class
             player = new Player();
-            playerMoveSpeed = 100 / tileSize;
             tileset = getTileset();
             base.Initialize();
         }
 
-        
         // WorldMap data
         public Tile[,] getTileset()
         {
@@ -123,10 +122,18 @@ namespace _2D_ARPG
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            float seconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
+            elapsedTime = seconds;
             UpdatePlayer();
             base.Update(gameTime);
+        }
+
+        // To check if key is pressed
+        bool KeyPressed(Keys key)
+        {
+            return currentKeyboardState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key);
         }
 
         // Player movement
@@ -134,36 +141,57 @@ namespace _2D_ARPG
         {
             if (currentKeyboardState.IsKeyDown(Keys.A))
             {
-                for (int i = 0; i < 16; i++)
+                if (previousKeyboardState.IsKeyUp(Keys.A) || keyRepeatTime < 0)
                 {
+                    keyRepeatTime = keyRepeatDelay;
+
                     player.PlayerPosition.X -= playerMoveSpeed;
                 }
+                else
+                    keyRepeatTime -= elapsedTime;
             }
+            //  if (KeyPressed(Keys.A))
+            //  {
+            //          
+            //  }
 
             if (currentKeyboardState.IsKeyDown(Keys.D))
             {
-                for (int i = 0; i < 16; i++)
+                if (previousKeyboardState.IsKeyUp(Keys.D) || keyRepeatTime < 0)
                 {
+                    keyRepeatTime = keyRepeatDelay;
+
                     player.PlayerPosition.X += playerMoveSpeed;
                 }
+                else
+                    keyRepeatTime -= elapsedTime;
             }
 
             if (currentKeyboardState.IsKeyDown(Keys.W))
             {
-                for (int i = 0; i < 16; i++)
+                if (previousKeyboardState.IsKeyUp(Keys.W) || keyRepeatTime < 0)
                 {
+                    keyRepeatTime = keyRepeatDelay;
+
                     player.PlayerPosition.Y -= playerMoveSpeed;
                 }
+                else
+                    keyRepeatTime -= elapsedTime;
             }
 
             if (currentKeyboardState.IsKeyDown(Keys.S))
             {
-                for (int i = 0; i < 16; i++)
+                if (previousKeyboardState.IsKeyUp(Keys.S) || keyRepeatTime < 0)
                 {
+                    keyRepeatTime = keyRepeatDelay;
+
                     player.PlayerPosition.Y += playerMoveSpeed;
                 }
+                else
+                    keyRepeatTime -= elapsedTime;
             }
-            if (currentKeyboardState.IsKeyDown(Keys.Enter))
+
+            if (KeyPressed(Keys.Enter))
             {
                 worldmap = 1;
             }
