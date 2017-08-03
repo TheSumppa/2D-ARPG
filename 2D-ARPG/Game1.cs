@@ -28,8 +28,8 @@ namespace _2D_ARPG
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
             graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferredBackBufferWidth = 256;
+            graphics.PreferredBackBufferHeight = 256;
         }
 
         /// Allows the game to perform any initialization it needs to before starting to run.
