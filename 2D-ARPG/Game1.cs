@@ -29,7 +29,7 @@ namespace _2D_ARPG
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 400;
             graphics.PreferredBackBufferHeight = 400;
         }
