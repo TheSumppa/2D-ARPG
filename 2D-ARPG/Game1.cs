@@ -18,8 +18,6 @@ namespace _2D_ARPG
         Tile[,] tileset;                            // Multidimensional array for tiles
         float playerMoveSpeed = 16;                 // Player movespeed
         int worldmap = 0;                           // Variable used for drawing woldmap
-        public Texture2D TileTexture;               // Texture for tiles
-        public Rectangle tileRectangle;             // Rectangle for tiles
         float keyRepeatTime;
         float elapsedTime;
         const float keyRepeatDelay = 0.2f;          // Repeat rate
@@ -29,9 +27,9 @@ namespace _2D_ARPG
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferWidth = 400;
-            graphics.PreferredBackBufferHeight = 400;
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
         }
 
         /// Allows the game to perform any initialization it needs to before starting to run.
