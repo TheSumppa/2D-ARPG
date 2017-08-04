@@ -18,18 +18,19 @@ namespace _2D_ARPG
         Tile[,] tileset;                            // Multidimensional array for tiles
         float playerMoveSpeed = 16;                 // Player movespeed
         int worldmap = 0;                           // Variable used for drawing woldmap
-        float keyRepeatTime;
-        float elapsedTime;
+        float keyRepeatTime;                        // repeattime used for movement
+        float elapsedTime;                          // Elapsed time used for movement
         const float keyRepeatDelay = 0.2f;          // Repeat rate
+        public SpriteFont font;                     // Sprite font used for text
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = 256;
-            graphics.PreferredBackBufferHeight = 256;
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferWidth = 1600;
+            graphics.PreferredBackBufferHeight = 1600;
         }
 
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -97,14 +98,15 @@ namespace _2D_ARPG
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + 
-            //     GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
+            WalkAnimation playerAnimation = new WalkAnimation();
+            Texture2D playerTexture = Content.Load<Texture2D>("knightwalkanimation");
             Vector2 playerPosition = new Vector2(256, 256);
             Rectangle playerRectangle = new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 16, 16);
-            player.Initialize(Content.Load<Texture2D>("Knight"), playerPosition, playerRectangle);
+            playerAnimation.Initialize(playerTexture, playerPosition, 16, 16, 2, 200, Color.White, 1.0f, true);
+            player.Initialize(playerAnimation, playerPosition);
+            font = Content.Load<SpriteFont>("Text");
         }
-
+        
 
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
@@ -124,7 +126,7 @@ namespace _2D_ARPG
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
             elapsedTime = seconds;
-            UpdatePlayer();
+            UpdatePlayer(gameTime);
             base.Update(gameTime);
         }
 
@@ -135,8 +137,9 @@ namespace _2D_ARPG
         }
 
         // Player movement
-        private void UpdatePlayer()
+        private void UpdatePlayer(GameTime gameTime)
         {
+            player.Update(gameTime);
             if (worldmap == 1)  // You can move only when game is active
             {
                 if (currentKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.S)
@@ -195,8 +198,8 @@ namespace _2D_ARPG
             }
 
             // This keeps player inside the bounds
-            player.PlayerPosition.X = MathHelper.Clamp(player.PlayerPosition.X, 0, GraphicsDevice.Viewport.Width - player.PlayerTexture.Width);
-            player.PlayerPosition.Y = MathHelper.Clamp(player.PlayerPosition.Y, 0, GraphicsDevice.Viewport.Height - player.PlayerTexture.Height);
+            player.PlayerPosition.X = MathHelper.Clamp(player.PlayerPosition.X, 0, GraphicsDevice.Viewport.Width - player.PlayerAnimation.FrameWidth);
+            player.PlayerPosition.Y = MathHelper.Clamp(player.PlayerPosition.Y, 0, GraphicsDevice.Viewport.Height - player.PlayerAnimation.FrameHeight);
         }
 
         /// This is called when the game should draw itself.
@@ -205,6 +208,10 @@ namespace _2D_ARPG
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
+            if(worldmap == 0)
+            {
+                spriteBatch.DrawString(font, "Press enter to play", new Vector2(400, 400), Color.Black);
+            }
             // Drawing WoldMap
             if(worldmap == 1)
             {
@@ -213,7 +220,7 @@ namespace _2D_ARPG
                     tile.Draw(spriteBatch);
                 }
                 // Drawing Player
-                player.Draw(spriteBatch);
+                player.Draw(spriteBatch);  
             }
             
             spriteBatch.End();

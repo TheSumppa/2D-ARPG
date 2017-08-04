@@ -11,28 +11,44 @@ namespace _2D_ARPG
     {
         public int Life;
         public int Attack;
-
+        public bool Active;
         public Vector2 PlayerPosition;
-        public Texture2D PlayerTexture;
-        public Rectangle PlayerRectangle;
+        // public Texture2D PlayerTexture;
+        public WalkAnimation PlayerAnimation;
 
-        public void Initialize(Texture2D texture, Vector2 position, Rectangle rectangle)
+        public int Width
         {
-            PlayerTexture = texture;
+            get { return PlayerAnimation.FrameWidth; }
+        }
+
+        public int Height
+        {
+            get { return PlayerAnimation.FrameHeight; }
+        }
+
+        public void Initialize(WalkAnimation animation, Vector2 position)
+        {
+            //PlayerTexture = texture;
+            PlayerAnimation = animation;
             PlayerPosition = position;
-            PlayerRectangle = rectangle;
+            Active = true;
             Life = 10;
             Attack = 5;
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
+
+
+            PlayerAnimation.Position = PlayerPosition;
+            PlayerAnimation.Update(gameTime);
 
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(PlayerTexture, PlayerPosition, null, null, null, 0f, null, null, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(PlayerTexture, PlayerPosition, null, null, null, 0f, null, null, SpriteEffects.None, 0f);
+            PlayerAnimation.Draw(spriteBatch);
         }
     }
 }
