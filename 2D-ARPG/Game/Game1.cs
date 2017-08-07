@@ -23,7 +23,7 @@ namespace _2D_ARPG
         float elapsedTime;                          // Elapsed time used for movement
         const float keyRepeatDelay = 0.2f;          // Repeat rate
         public SpriteFont font;                     // Sprite font used for text
-        Camera camera;                              // Game camera
+        Camera camera;                              // Gamecamera
 
         public Game1()
         {
