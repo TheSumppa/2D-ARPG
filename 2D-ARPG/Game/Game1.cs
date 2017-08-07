@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 using System.Xml.Linq;
+using Comora;
 
 namespace _2D_ARPG
 {
@@ -22,15 +23,17 @@ namespace _2D_ARPG
         float elapsedTime;                          // Elapsed time used for movement
         const float keyRepeatDelay = 0.2f;          // Repeat rate
         public SpriteFont font;                     // Sprite font used for text
+        Camera camera;                              // Game camera
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
+
         }
 
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -40,9 +43,9 @@ namespace _2D_ARPG
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            // Initializing player class
-            player = new Player();
-            tileset = getTileset();
+            player = new Player();                          // Initializing our player
+            tileset = getTileset();                         // Initializing our tileset
+            camera = new Camera(this.GraphicsDevice);       // Initializing our gameCamera
             base.Initialize();
         }
 
@@ -98,13 +101,16 @@ namespace _2D_ARPG
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
             WalkAnimation playerAnimation = new WalkAnimation();
             Texture2D playerTexture = Content.Load<Texture2D>("knightwalkanimation");
-            Vector2 playerPosition = new Vector2(256, 256);
+            Vector2 playerPosition = new Vector2(800, 800);
             Rectangle playerRectangle = new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 16, 16);
             playerAnimation.Initialize(playerTexture, playerPosition, 16, 16, 2, 200, Color.White, 1.0f, true);
             player.Initialize(playerAnimation, playerPosition);
             font = Content.Load<SpriteFont>("Text");
+            camera.Scale = 6.0f;
+
         }
         
 
@@ -127,6 +133,8 @@ namespace _2D_ARPG
             currentKeyboardState = Keyboard.GetState();
             elapsedTime = seconds;
             UpdatePlayer(gameTime);
+            this.camera.Update(gameTime);
+            this.camera.Position = player.PlayerPosition;
             base.Update(gameTime);
         }
 
@@ -206,8 +214,8 @@ namespace _2D_ARPG
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-
+            spriteBatch.Begin(this.camera, SpriteSortMode.Deferred,
+                BlendState.AlphaBlend, SamplerState.PointClamp);
             if(worldmap == 0)
             {
                 spriteBatch.DrawString(font, "Press enter to play", new Vector2(400, 400), Color.Black);
@@ -219,8 +227,10 @@ namespace _2D_ARPG
                 {
                     tile.Draw(spriteBatch);
                 }
+
                 // Drawing Player
                 player.Draw(spriteBatch);  
+                
             }
             
             spriteBatch.End();

@@ -38,11 +38,8 @@ namespace _2D_ARPG
 
         public void Update(GameTime gameTime)
         {
-
-
             PlayerAnimation.Position = PlayerPosition;
             PlayerAnimation.Update(gameTime);
-
         }
 
         public void Draw(SpriteBatch spriteBatch)
