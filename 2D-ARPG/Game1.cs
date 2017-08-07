@@ -29,8 +29,8 @@ namespace _2D_ARPG
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferWidth = 1600;
-            graphics.PreferredBackBufferHeight = 1600;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
         }
 
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -198,8 +198,8 @@ namespace _2D_ARPG
             }
 
             // This keeps player inside the bounds
-            player.PlayerPosition.X = MathHelper.Clamp(player.PlayerPosition.X, 0, GraphicsDevice.Viewport.Width - player.PlayerAnimation.FrameWidth);
-            player.PlayerPosition.Y = MathHelper.Clamp(player.PlayerPosition.Y, 0, GraphicsDevice.Viewport.Height - player.PlayerAnimation.FrameHeight);
+            // player.PlayerPosition.X = MathHelper.Clamp(player.PlayerPosition.X, 0, GraphicsDevice.Viewport.Width - player.PlayerAnimation.FrameWidth);
+            // player.PlayerPosition.Y = MathHelper.Clamp(player.PlayerPosition.Y, 0, GraphicsDevice.Viewport.Height - player.PlayerAnimation.FrameHeight);
         }
 
         /// This is called when the game should draw itself.
