@@ -21,7 +21,7 @@ namespace _2D_ARPG
         int worldmap = 0;                           // Variable used for drawing woldmap
         float keyRepeatTime;                        // repeattime used for movement
         float elapsedTime;                          // Elapsed time used for movement
-        const float keyRepeatDelay = 0.2f;          // Repeat rate
+        const float keyRepeatDelay = 0.33f;          // Repeat rate
         public SpriteFont font;                     // Sprite font used for text
         Camera camera;                              // Gamecamera
 
@@ -30,7 +30,7 @@ namespace _2D_ARPG
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
 
@@ -132,9 +132,9 @@ namespace _2D_ARPG
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
             elapsedTime = seconds;
-            UpdatePlayer(gameTime);
             this.camera.Update(gameTime);
             this.camera.Position = player.PlayerPosition;
+            UpdatePlayer(gameTime);
             base.Update(gameTime);
         }
 
@@ -214,6 +214,7 @@ namespace _2D_ARPG
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
             spriteBatch.Begin(this.camera, SpriteSortMode.Deferred,
                 BlendState.AlphaBlend, SamplerState.PointClamp);
             if(worldmap == 0)
@@ -229,10 +230,9 @@ namespace _2D_ARPG
                 }
 
                 // Drawing Player
-                player.Draw(spriteBatch);  
-                
-            }
-            
+                player.Draw(spriteBatch);
+
+            }       
             spriteBatch.End();
             base.Draw(gameTime);
         }
