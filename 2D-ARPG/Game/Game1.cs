@@ -21,7 +21,7 @@ namespace _2D_ARPG
         int worldmap = 0;                           // Variable used for drawing woldmap
         float keyRepeatTime;                        // repeattime used for movement
         float elapsedTime;                          // Elapsed time used for movement
-        const float keyRepeatDelay = 0.33f;          // Repeat rate
+        const float keyRepeatDelay = 0.33f;         // Repeat rate
         public SpriteFont font;                     // Sprite font used for text
         Camera camera;                              // Gamecamera
 
@@ -109,6 +109,8 @@ namespace _2D_ARPG
             playerAnimation.Initialize(playerTexture, playerPosition, 16, 16, 2, 200, Color.White, 1.0f, true);
             player.Initialize(playerAnimation, playerPosition);
             font = Content.Load<SpriteFont>("Text");
+
+            // Camera "zoom" level
             camera.Scale = 6.0f;
 
         }
@@ -219,7 +221,7 @@ namespace _2D_ARPG
                 BlendState.AlphaBlend, SamplerState.PointClamp);
             if(worldmap == 0)
             {
-                spriteBatch.DrawString(font, "Press enter to play", new Vector2(400, 400), Color.Black);
+                spriteBatch.DrawString(font, "Press enter to play", new Vector2(960, 540), Color.Black);
             }
             // Drawing WoldMap
             if(worldmap == 1)
