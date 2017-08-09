@@ -223,6 +223,7 @@ namespace _2D_ARPG
             {
                 spriteBatch.DrawString(font, "Press enter to play", new Vector2(960, 540), Color.Black);
             }
+
             // Drawing WoldMap
             if(worldmap == 1)
             {
@@ -233,8 +234,8 @@ namespace _2D_ARPG
 
                 // Drawing Player
                 player.Draw(spriteBatch);
+            }
 
-            }       
             spriteBatch.End();
             base.Draw(gameTime);
         }
