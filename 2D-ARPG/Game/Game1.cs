@@ -30,7 +30,7 @@ namespace _2D_ARPG
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
 
@@ -111,7 +111,7 @@ namespace _2D_ARPG
             font = Content.Load<SpriteFont>("Text");
 
             // Camera "zoom" level
-            camera.Scale = 6.0f;
+            camera.Scale = 5.0f;
 
         }
         
