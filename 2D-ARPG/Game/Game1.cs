@@ -30,7 +30,7 @@ namespace _2D_ARPG
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
 
@@ -59,9 +59,7 @@ namespace _2D_ARPG
             int Columns = int.Parse(xDoc.Root.Element("tileset").Attribute("columns").Value);
             string IdArray = xDoc.Root.Element("layer").Element("data").Value;
             string[] splitArray = IdArray.Split(',');
-
             int[,] intIDs = new int[MapWidth, MapHeight];
-
             for (int x = 0; x < MapWidth; x++)
             {
                 for (int y = 0; y < MapHeight; y++)
@@ -69,7 +67,7 @@ namespace _2D_ARPG
                     intIDs[x, y] = int.Parse(splitArray[x + y * MapWidth]);
                 }
             }
-
+            
             int num = 0;
 
             Vector2[] sourcePosition = new Vector2[TileCount];
@@ -83,7 +81,6 @@ namespace _2D_ARPG
             }
 
             Texture2D sourceTex = Content.Load<Texture2D>("Tileset");
-
             Tile[,] tiles = new Tile[MapWidth, MapHeight];
             for (int x = 0; x < MapWidth; x++)
             {
@@ -92,7 +89,7 @@ namespace _2D_ARPG
                     tiles[x, y] = new Tile(new Vector2(x * 16, y * 16), sourceTex, new Rectangle((int)sourcePosition[intIDs[x, y] - 1].X, (int)sourcePosition[intIDs[x, y] - 1].Y, 16, 16));
                 }
             }
-            return tiles;
+            return tiles;          
         }
 
         /// LoadContent will be called once per game and is the place to load
@@ -109,7 +106,6 @@ namespace _2D_ARPG
             playerAnimation.Initialize(playerTexture, playerPosition, 16, 16, 2, 200, Color.White, 1.0f, true);
             player.Initialize(playerAnimation, playerPosition);
             font = Content.Load<SpriteFont>("Text");
-
             // Camera "zoom" level
             camera.Scale = 5.0f;
 
@@ -137,7 +133,9 @@ namespace _2D_ARPG
             this.camera.Update(gameTime);
             this.camera.Position = player.PlayerPosition;
             UpdatePlayer(gameTime);
+            //Debug.WriteLine(player.PlayerPosition);
             base.Update(gameTime);
+            
         }
 
         // To check if key is pressed
