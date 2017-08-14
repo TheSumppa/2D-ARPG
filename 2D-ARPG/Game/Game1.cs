@@ -96,7 +96,6 @@ namespace _2D_ARPG
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             WalkAnimation playerAnimation = new WalkAnimation();
             Texture2D playerTexture = Content.Load<Texture2D>("knightwalkanimation");
             Vector2 playerPosition = new Vector2(768, 800);
@@ -214,7 +213,6 @@ namespace _2D_ARPG
                 {
                     tile.Draw(spriteBatch);
                 }
-
                 // Draw Player
                 player.Draw(spriteBatch);
             }
