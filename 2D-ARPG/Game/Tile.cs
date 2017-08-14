@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Xml.Linq; 
+using System.Xml.Linq;
 
 namespace _2D_ARPG
 {
@@ -22,6 +22,7 @@ namespace _2D_ARPG
             tileTexture = a_tex;
             tileRectangle = a_rect;
         }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(tileTexture, tilePosition, null, tileRectangle, null, 0f, null, null, SpriteEffects.None, 0f);

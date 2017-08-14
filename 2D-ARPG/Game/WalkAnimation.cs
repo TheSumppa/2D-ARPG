@@ -51,11 +51,11 @@ namespace _2D_ARPG
             {
                 currentFrame++;
 
-                if(currentFrame == FrameCount)
+                if (currentFrame == FrameCount)
                 {
                     currentFrame = 0;
                     if (Looping == false)
-                    Active = false;
+                        Active = false;
                 }
 
                 elapsedTime = 0;
@@ -69,7 +69,7 @@ namespace _2D_ARPG
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(Active)
+            if (Active)
             {
                 spriteBatch.Draw(animation, destinationRect, sourceRect, color);
             }
