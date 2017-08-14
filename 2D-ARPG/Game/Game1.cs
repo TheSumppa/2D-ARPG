@@ -24,6 +24,7 @@ namespace _2D_ARPG
         const float keyRepeatDelay = 0.33f;         // Repeat rate
         public SpriteFont font;                     // Sprite font used for text
         Camera camera;                              // Gamecamera
+        int[,] collisionIDs;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -42,9 +43,9 @@ namespace _2D_ARPG
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            player = new Player();
-            tileset = getTileset();
-            camera = new Camera(this.GraphicsDevice);
+            player = new Player();                          // Initializing our player
+            tileset = getTileset();                         // Initializing our tileset
+            camera = new Camera(this.GraphicsDevice);       // Initializing our gameCamera
             base.Initialize();
         }
         // WorldMap data
@@ -58,15 +59,13 @@ namespace _2D_ARPG
             string IdArray = xDoc.Root.Element("layer").Element("data").Value;
             string[] splitArray = IdArray.Split(',');
             int[,] intIDs = new int[MapWidth, MapHeight];
-
             for (int x = 0; x < MapWidth; x++)
             {
                 for (int y = 0; y < MapHeight; y++)
                 {
-                    intIDs[x, y] = int.Parse(splitArray[x + y * MapWidth]);
+                    intIDs[x, y] = int.Parse(splitArray[x + y * MapWidth]);   
                 }
             }
-
             int num = 0;
 
             Vector2[] sourcePosition = new Vector2[TileCount];
@@ -85,7 +84,7 @@ namespace _2D_ARPG
             {
                 for (int y = 0; y < MapHeight; y++)
                 {
-                    tiles[x, y] = new Tile(new Vector2(x * 16, y * 16), sourceTex, new Rectangle((int)sourcePosition[intIDs[x, y] - 1].X, (int)sourcePosition[intIDs[x, y] - 1].Y, 16, 16));
+                    tiles[x, y] = new Tile(new Vector2(x * 16, y * 16), sourceTex, new Rectangle((int)sourcePosition[intIDs[x, y] - 1].X, (int)sourcePosition[intIDs[x, y] - 1].Y, 16, 16));      
                 }
             }
             return tiles;
@@ -97,9 +96,10 @@ namespace _2D_ARPG
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
             WalkAnimation playerAnimation = new WalkAnimation();
             Texture2D playerTexture = Content.Load<Texture2D>("knightwalkanimation");
-            Vector2 playerPosition = new Vector2(800, 800);
+            Vector2 playerPosition = new Vector2(768, 800);
             Rectangle playerRectangle = new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 16, 16);
             playerAnimation.Initialize(playerTexture, playerPosition, 16, 16, 2, 200, Color.White, 1.0f, true);
             player.Initialize(playerAnimation, playerPosition);
@@ -111,7 +111,7 @@ namespace _2D_ARPG
         /// game-specific content.
         protected override void UnloadContent()
         {
-
+            // TODO: Unload any non ContentManager content here
         }
 
         /// Allows the game to run logic such as updating the world,
@@ -130,9 +130,8 @@ namespace _2D_ARPG
             UpdatePlayer(gameTime);
             //Debug.WriteLine(player.PlayerPosition);
             base.Update(gameTime);
-
+            
         }
-
         // To check if key is pressed
         bool KeyPressed(Keys key)
         {
@@ -143,8 +142,9 @@ namespace _2D_ARPG
         private void UpdatePlayer(GameTime gameTime)
         {
             player.Update(gameTime);
-            if (worldmap == 1)  // You can move only when game is active
+            if (worldmap == 1)
             {
+
                 if (currentKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.S)
                 && currentKeyboardState.IsKeyUp(Keys.D))
                 {
@@ -164,7 +164,6 @@ namespace _2D_ARPG
                     {
                         keyRepeatTime = keyRepeatDelay;
                         player.PlayerPosition.X += playerMoveSpeed;
-
                     }
                     else
                         keyRepeatTime -= elapsedTime;
@@ -196,29 +195,19 @@ namespace _2D_ARPG
 
             }
 
-            if (KeyPressed(Keys.Enter))
+            if (KeyPressed(Keys.Enter))                    //sets worldmap active
             {
-                worldmap = 1;
+                    worldmap = 1;        
             }
-
-            // This keeps player inside the bounds
-            // player.PlayerPosition.X = MathHelper.Clamp(player.PlayerPosition.X, 0, GraphicsDevice.Viewport.Width - player.PlayerAnimation.FrameWidth);
-            // player.PlayerPosition.Y = MathHelper.Clamp(player.PlayerPosition.Y, 0, GraphicsDevice.Viewport.Height - player.PlayerAnimation.FrameHeight);
         }
 
         /// This is called when the game should draw itself.
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             spriteBatch.Begin(this.camera, SpriteSortMode.Deferred,
-                BlendState.AlphaBlend, SamplerState.PointClamp);
-            if (worldmap == 0)
-            {
-                spriteBatch.DrawString(font, "Press enter to play", new Vector2(960, 540), Color.Black);
-            }
-
-            // Drawing WoldMap
+            BlendState.AlphaBlend, SamplerState.PointClamp);
+            // Draw WorldMap
             if (worldmap == 1)
             {
                 foreach (Tile tile in tileset)
@@ -226,10 +215,9 @@ namespace _2D_ARPG
                     tile.Draw(spriteBatch);
                 }
 
-                // Drawing Player
+                // Draw Player
                 player.Draw(spriteBatch);
             }
-
             spriteBatch.End();
             base.Draw(gameTime);
         }
