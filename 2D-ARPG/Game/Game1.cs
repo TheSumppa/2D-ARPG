@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -23,8 +24,15 @@ namespace _2D_ARPG
         float elapsedTime;                          // Elapsed time used for movement
         const float keyRepeatDelay = 0.33f;         // Repeat rate
         public SpriteFont font;                     // Sprite font used for text
-        Camera camera;                              // Gamecamera
-        int[,] collisionIDs;
+        Camera camera;                              // Game camera
+
+        int mapWidth;
+        int mapHeight;
+        int[,] CollisionIDs = new int[100, 100];
+        int checkTileValue;
+        int checkMapX;
+        int checkMapY;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -59,15 +67,19 @@ namespace _2D_ARPG
             string IdArray = xDoc.Root.Element("layer").Element("data").Value;
             string[] splitArray = IdArray.Split(',');
             int[,] intIDs = new int[MapWidth, MapHeight];
+            mapWidth = MapWidth;
+            mapHeight = MapHeight;
+
             for (int x = 0; x < MapWidth; x++)
             {
                 for (int y = 0; y < MapHeight; y++)
                 {
-                    intIDs[x, y] = int.Parse(splitArray[x + y * MapWidth]);   
+                    intIDs[x, y] = int.Parse(splitArray[x + y * MapWidth]);
+                    CollisionIDs[x, y] = int.Parse(splitArray[x + y * MapWidth]);
                 }
             }
-            int num = 0;
 
+            int num = 0;
             Vector2[] sourcePosition = new Vector2[TileCount];
             for (int x = 0; x < TileCount / Columns; x++)
             {
@@ -84,7 +96,7 @@ namespace _2D_ARPG
             {
                 for (int y = 0; y < MapHeight; y++)
                 {
-                    tiles[x, y] = new Tile(new Vector2(x * 16, y * 16), sourceTex, new Rectangle((int)sourcePosition[intIDs[x, y] - 1].X, (int)sourcePosition[intIDs[x, y] - 1].Y, 16, 16));      
+                    tiles[x, y] = new Tile(new Vector2(x * 16, y * 16), sourceTex, new Rectangle((int)sourcePosition[intIDs[x, y] - 1].X, (int)sourcePosition[intIDs[x, y] - 1].Y, 16, 16));
                 }
             }
             return tiles;
@@ -127,14 +139,34 @@ namespace _2D_ARPG
             this.camera.Update(gameTime);
             this.camera.Position = player.PlayerPosition;
             UpdatePlayer(gameTime);
-            //Debug.WriteLine(player.PlayerPosition);
+            Debug.WriteLine(player.PlayerPosition);
+            Debug.WriteLine(checkTileValue);
+            Debug.WriteLine(checkMapX);
+            Debug.WriteLine(checkMapY);
+            Debug.WriteLine(isPassable(checkMapX, checkMapY));
             base.Update(gameTime);
-            
+
         }
         // To check if key is pressed
         bool KeyPressed(Keys key)
         {
             return currentKeyboardState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key);
+        }
+
+        // To check if tile is walkable
+        public bool isPassable(int x, int y)
+        {
+            int tileValue = CollisionIDs[((int)player.PlayerPosition.X / 16 - 1), ((int)player.PlayerPosition.Y / 16 - 1)];
+            checkTileValue = tileValue;
+            checkMapX = (int)player.PlayerPosition.X;
+            checkMapY = (int)player.PlayerPosition.Y;
+            if (tileValue == 1 || tileValue == 3 || tileValue == 5 || tileValue == 6 || tileValue == 7 || tileValue == 8 || tileValue == 9
+                || tileValue == 10 || tileValue == 11 || tileValue == 12 || tileValue == 14 || tileValue == 15 || tileValue == 16 || tileValue == 17
+                || tileValue == 19 || tileValue == 21 || tileValue == 22 || tileValue == 24 || tileValue == 29 || tileValue == 30 || tileValue == 31 || tileValue == 32
+                || tileValue == 33 || tileValue == 34 || tileValue == 35 || tileValue == 36)
+                return true;
+            else
+                return false;
         }
 
         // Player movement
@@ -150,7 +182,8 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.A) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-                        player.PlayerPosition.X -= playerMoveSpeed;
+                        if (isPassable((int)player.PlayerPosition.X - 1, (int)player.PlayerPosition.Y))
+                            player.PlayerPosition.X -= playerMoveSpeed;
                     }
                     else
                         keyRepeatTime -= elapsedTime;
@@ -162,7 +195,8 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.D) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-                        player.PlayerPosition.X += playerMoveSpeed;
+                        if (isPassable((int)player.PlayerPosition.X + 1, (int)player.PlayerPosition.Y))
+                            player.PlayerPosition.X += playerMoveSpeed;
                     }
                     else
                         keyRepeatTime -= elapsedTime;
@@ -174,7 +208,8 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.W) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-                        player.PlayerPosition.Y -= playerMoveSpeed;
+                        if (isPassable((int)player.PlayerPosition.X, (int)player.PlayerPosition.Y - 1))
+                            player.PlayerPosition.Y -= playerMoveSpeed;
                     }
                     else
                         keyRepeatTime -= elapsedTime;
@@ -186,7 +221,8 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.S) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-                        player.PlayerPosition.Y += playerMoveSpeed;
+                        if (isPassable((int)player.PlayerPosition.X, (int)player.PlayerPosition.Y + 1))
+                            player.PlayerPosition.Y += playerMoveSpeed;
                     }
                     else
                         keyRepeatTime -= elapsedTime;
@@ -196,7 +232,7 @@ namespace _2D_ARPG
 
             if (KeyPressed(Keys.Enter))                    //sets worldmap active
             {
-                    worldmap = 1;        
+                worldmap = 1;
             }
         }
 
