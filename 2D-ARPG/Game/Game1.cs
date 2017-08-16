@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -192,7 +191,6 @@ namespace _2D_ARPG
             player.Update(gameTime);
             if (worldmap == 1)
             {
-
                 if (currentKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.S)
                 && currentKeyboardState.IsKeyUp(Keys.D))
                 {
