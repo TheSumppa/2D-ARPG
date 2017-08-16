@@ -25,13 +25,8 @@ namespace _2D_ARPG
         const float keyRepeatDelay = 0.33f;         // Repeat rate
         public SpriteFont font;                     // Sprite font used for text
         Camera camera;                              // Game camera
-
-        int mapWidth;
-        int mapHeight;
-        int[,] CollisionIDs = new int[100, 100];
-        int checkTileValue;
-        int checkMapX;
-        int checkMapY;
+        int[,] CollisionIDs = new int[100, 100];    // ID's used for collision
+  
 
         public Game1()
         {
@@ -67,8 +62,6 @@ namespace _2D_ARPG
             string IdArray = xDoc.Root.Element("layer").Element("data").Value;
             string[] splitArray = IdArray.Split(',');
             int[,] intIDs = new int[MapWidth, MapHeight];
-            mapWidth = MapWidth;
-            mapHeight = MapHeight;
 
             for (int x = 0; x < MapWidth; x++)
             {
@@ -139,10 +132,6 @@ namespace _2D_ARPG
             this.camera.Update(gameTime);
             this.camera.Position = player.PlayerPosition;
             UpdatePlayer(gameTime);
-            Debug.WriteLine(player.PlayerPosition);
-            Debug.WriteLine(checkTileValue);
-            Debug.WriteLine(checkMapX);
-            Debug.WriteLine(checkMapY);
             base.Update(gameTime);
 
         }
