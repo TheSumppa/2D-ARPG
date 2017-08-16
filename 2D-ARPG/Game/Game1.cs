@@ -143,7 +143,6 @@ namespace _2D_ARPG
             Debug.WriteLine(checkTileValue);
             Debug.WriteLine(checkMapX);
             Debug.WriteLine(checkMapY);
-            Debug.WriteLine(isPassable(checkMapX, checkMapY));
             base.Update(gameTime);
 
         }
@@ -153,20 +152,49 @@ namespace _2D_ARPG
             return currentKeyboardState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key);
         }
 
-        // To check if tile is walkable
-        public bool isPassable(int x, int y)
+        // Collision check to Up
+        public bool isPassableUp(int x, int y)
         {
-            int tileValue = CollisionIDs[((int)player.PlayerPosition.X / 16 - 1), ((int)player.PlayerPosition.Y / 16 - 1)];
-            checkTileValue = tileValue;
-            checkMapX = (int)player.PlayerPosition.X;
-            checkMapY = (int)player.PlayerPosition.Y;
-            if (tileValue == 1 || tileValue == 3 || tileValue == 5 || tileValue == 6 || tileValue == 7 || tileValue == 8 || tileValue == 9
-                || tileValue == 10 || tileValue == 11 || tileValue == 12 || tileValue == 14 || tileValue == 15 || tileValue == 16 || tileValue == 17
-                || tileValue == 19 || tileValue == 21 || tileValue == 22 || tileValue == 24 || tileValue == 29 || tileValue == 30 || tileValue == 31 || tileValue == 32
-                || tileValue == 33 || tileValue == 34 || tileValue == 35 || tileValue == 36)
+            int tileValueUp = CollisionIDs[((int)player.PlayerPosition.X / 16 - 1), (((int)player.PlayerPosition.Y / 16 - 1)) - 1];
+            if (tileValueUp == 1 || tileValueUp == 3 || tileValueUp == 5 || tileValueUp == 6 || tileValueUp == 7 || tileValueUp == 8 || tileValueUp == 9
+                || tileValueUp == 10 || tileValueUp == 11 || tileValueUp == 12 || tileValueUp == 14 || tileValueUp == 15 || tileValueUp == 16 || tileValueUp == 17
+                || tileValueUp == 19 || tileValueUp == 21 || tileValueUp == 22 || tileValueUp == 24 || tileValueUp == 29 || tileValueUp == 30 || tileValueUp == 31 || tileValueUp == 32
+                || tileValueUp == 33 || tileValueUp == 34 || tileValueUp == 35 || tileValueUp == 36)
                 return true;
-            else
-                return false;
+            return false;
+        }
+        // Collision check to Down
+        public bool isPassableDown(int x, int y)
+        {
+            int tileValueDown = CollisionIDs[((int)player.PlayerPosition.X / 16 - 1), (((int)player.PlayerPosition.Y / 16 - 1)) + 1];
+            if (tileValueDown == 1 || tileValueDown == 3 || tileValueDown == 5 || tileValueDown == 6 || tileValueDown == 7 || tileValueDown == 8 || tileValueDown == 9
+                || tileValueDown == 10 || tileValueDown == 11 || tileValueDown == 12 || tileValueDown == 14 || tileValueDown == 15 || tileValueDown == 16 || tileValueDown == 17
+                || tileValueDown == 19 || tileValueDown == 21 || tileValueDown == 22 || tileValueDown == 24 || tileValueDown == 29 || tileValueDown == 30 || tileValueDown == 31 || tileValueDown == 32
+                || tileValueDown == 33 || tileValueDown == 34 || tileValueDown == 35 || tileValueDown == 36)
+                return true;
+            return false;
+        }
+        // Collision check to Left
+        public bool isPassableLeft(int x, int y)
+        {
+            int tileValueLeft = CollisionIDs[(((int)player.PlayerPosition.X / 16 - 1)) - 1, (((int)player.PlayerPosition.Y / 16 - 1))];
+            if (tileValueLeft == 1 || tileValueLeft == 3 || tileValueLeft == 5 || tileValueLeft == 6 || tileValueLeft == 7 || tileValueLeft == 8 || tileValueLeft == 9
+                || tileValueLeft == 10 || tileValueLeft == 11 || tileValueLeft == 12 || tileValueLeft == 14 || tileValueLeft == 15 || tileValueLeft == 16 || tileValueLeft == 17
+                || tileValueLeft == 19 || tileValueLeft == 21 || tileValueLeft == 22 || tileValueLeft == 24 || tileValueLeft == 29 || tileValueLeft == 30 || tileValueLeft == 31 || tileValueLeft == 32
+                || tileValueLeft == 33 || tileValueLeft == 34 || tileValueLeft == 35 || tileValueLeft == 36)
+                return true;
+            return false;
+        }
+        // Collision check to right
+        public bool isPassableRight(int x, int y)
+        {
+            int tileValueRight = CollisionIDs[(((int)player.PlayerPosition.X / 16 - 1)) + 1, ((int)player.PlayerPosition.Y / 16 - 1)];
+            if (tileValueRight == 1 || tileValueRight == 3 || tileValueRight == 5 || tileValueRight == 6 || tileValueRight == 7 || tileValueRight == 8 || tileValueRight == 9
+                || tileValueRight == 10 || tileValueRight == 11 || tileValueRight == 12 || tileValueRight == 14 || tileValueRight == 15 || tileValueRight == 16 || tileValueRight == 17
+                || tileValueRight == 19 || tileValueRight == 21 || tileValueRight == 22 || tileValueRight == 24 || tileValueRight == 29 || tileValueRight == 30 || tileValueRight == 31 || tileValueRight == 32
+                || tileValueRight == 33 || tileValueRight == 34 || tileValueRight == 35 || tileValueRight == 36)
+                return true;
+            return false;
         }
 
         // Player movement
@@ -182,7 +210,7 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.A) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-                        if (isPassable((int)player.PlayerPosition.X - 1, (int)player.PlayerPosition.Y))
+                        if (isPassableLeft((int)player.PlayerPosition.X / 16 - 1, (int)player.PlayerPosition.Y))
                             player.PlayerPosition.X -= playerMoveSpeed;
                     }
                     else
@@ -195,7 +223,7 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.D) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-                        if (isPassable((int)player.PlayerPosition.X + 1, (int)player.PlayerPosition.Y))
+                        if (isPassableRight((int)player.PlayerPosition.X / 16 + 1, (int)player.PlayerPosition.Y))
                             player.PlayerPosition.X += playerMoveSpeed;
                     }
                     else
@@ -208,7 +236,7 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.W) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-                        if (isPassable((int)player.PlayerPosition.X, (int)player.PlayerPosition.Y - 1))
+                        if (isPassableUp((int)player.PlayerPosition.X, (int)player.PlayerPosition.Y / 16 - 1))
                             player.PlayerPosition.Y -= playerMoveSpeed;
                     }
                     else
@@ -221,7 +249,7 @@ namespace _2D_ARPG
                     if (previousKeyboardState.IsKeyUp(Keys.S) || keyRepeatTime < 0)
                     {
                         keyRepeatTime = keyRepeatDelay;
-                        if (isPassable((int)player.PlayerPosition.X, (int)player.PlayerPosition.Y + 1))
+                        if (isPassableDown((int)player.PlayerPosition.X, (int)player.PlayerPosition.Y / 16 + 1))
                             player.PlayerPosition.Y += playerMoveSpeed;
                     }
                     else
