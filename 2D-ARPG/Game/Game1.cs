@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Media;
 using System;
 using System.Diagnostics;
 using System.Xml.Linq;
@@ -21,6 +19,7 @@ namespace _2D_ARPG
         Tile[,] tileset;                            // Multidimensional array for tiles
         float playerMoveSpeed = 16;                 // Player movespeed
         int worldMap = 0;                           // Variable used for drawing worldmap
+        int townValue = 0;
         float keyRepeatTime;                        // repeattime used for movement
         float elapsedTime;                          // Elapsed time used for movement
         float keyRepeatDelay = 0.25f;               // Repeat rate
@@ -262,7 +261,7 @@ namespace _2D_ARPG
             spriteBatch.Begin(this.camera, SpriteSortMode.Deferred,
             BlendState.AlphaBlend, SamplerState.PointClamp);
             // Draw WorldMap
-            if (worldMap == 1)
+            if (worldMap == 1 && townValue < 1)
             {
                 foreach (Tile tile in tileset)
                 {
