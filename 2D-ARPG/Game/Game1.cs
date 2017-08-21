@@ -122,7 +122,7 @@ namespace _2D_ARPG
             Rectangle playerRectangle = new Rectangle((int)playerPosition.X, (int)playerPosition.Y, 16, 16);
             playerAnimation.Initialize(playerTexture, playerPosition, 16, 16, 2, 200, Color.White, 1.0f, true);
             player.Initialize(playerAnimation, playerPosition);
-            camera.Scale = 1.0f;
+            camera.Scale = 5.0f;
         }
    
         /// UnloadContent will be called once per game and is the place to unload
