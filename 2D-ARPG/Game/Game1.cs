@@ -19,7 +19,7 @@ namespace _2D_ARPG
         Tile[,] tileset;                            // Multidimensional array for tiles
         float playerMoveSpeed = 16;                 // Player movespeed
         int worldMap = 0;                           // Variable used for drawing worldmap
-        int townValue = 0;
+        int townValue = 0;                          // Variable used for drawing towns
         float keyRepeatTime;                        // repeattime used for movement
         float elapsedTime;                          // Elapsed time used for movement
         float keyRepeatDelay = 0.25f;               // Repeat rate
