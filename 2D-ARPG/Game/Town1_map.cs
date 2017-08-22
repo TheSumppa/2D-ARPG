@@ -11,6 +11,7 @@ namespace _2D_ARPG
     public class Town1_map
     {
         public Tile[,] town1Tiles;
+        public int[,] townCollisions = new int[100, 100];
         public Tile[,] getTownTiles(ContentManager Content)
         {
             XDocument townXdoc = XDocument.Load("Content/Town_1.tmx");
@@ -27,6 +28,7 @@ namespace _2D_ARPG
                 for (int y = 0; y < mapHeight; y++)
                 {
                     tileIDs[x, y] = int.Parse(townIDSplit[x + y * mapWidth]);
+                    townCollisions[x, y] = int.Parse(townIDSplit[x + y * mapWidth]);
                 }
             }
 

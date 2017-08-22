@@ -28,7 +28,9 @@ namespace _2D_ARPG
         public SpriteFont font;                     // Sprite font used for text
         Camera camera;                              // Game camera
         int[,] CollisionIDs = new int[100, 100];    // ID's used for collision
-
+        int[,] TownCollisionIDs = new int[100, 100];
+        XDocument CurDoc;
+        XDocument NexDoc;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -37,7 +39,6 @@ namespace _2D_ARPG
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
-
         }
 
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -47,24 +48,29 @@ namespace _2D_ARPG
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            town1Map = new Town1_map();                          // Initializing our Town1 Map class
+            tilesetWorldMap = getTileset();                      // Initializing our worldmap tileset
+            tilesetTown1 = town1Map.getTownTiles(this.Content);  // Initializing our town tileset
             player = new Player();                               // Initializing our player
             player.Attack = 5;                                   // Player Attack value
-            player.Life = 10;                                    // Player Life value     
-            tilesetWorldMap = getTileset();                      // Initializing our tileset            
+            player.Life = 10;                                    // Player Life value                 
             camera = new Camera(this.GraphicsDevice);            // Initializing our gameCamera
-            town1Map = new Town1_map();                          // Initializing our Town1 Map class
-            tilesetTown1 = town1Map.getTownTiles(this.Content);
+            TownCollisionIDs = town1Map.townCollisions;
             base.Initialize();
         }
+
         // WorldMap data
         public Tile[,] getTileset()
         {
-            XDocument xDoc = XDocument.Load("Content/WorldMap.tmx");
-            int MapWidth = int.Parse(xDoc.Root.Attribute("width").Value);
-            int MapHeight = int.Parse(xDoc.Root.Attribute("height").Value);
-            int TileCount = int.Parse(xDoc.Root.Element("tileset").Attribute("tilecount").Value);
-            int Columns = int.Parse(xDoc.Root.Element("tileset").Attribute("columns").Value);
-            string IdArray = xDoc.Root.Element("layer").Element("data").Value;
+            XDocument mapXDoc = XDocument.Load("Content/WorldMap.tmx");
+            XDocument townxDoc = XDocument.Load("Content/Town_1.tmx");
+            CurDoc = mapXDoc;
+            NexDoc = townxDoc;
+            int MapWidth = int.Parse(CurDoc.Root.Attribute("width").Value);
+            int MapHeight = int.Parse(CurDoc.Root.Attribute("height").Value);
+            int TileCount = int.Parse(CurDoc.Root.Element("tileset").Attribute("tilecount").Value);
+            int Columns = int.Parse(CurDoc.Root.Element("tileset").Attribute("columns").Value);
+            string IdArray = CurDoc.Root.Element("layer").Element("data").Value;
             string[] splitArray = IdArray.Split(',');
             int[,] intIDs = new int[MapWidth, MapHeight];
 
@@ -99,23 +105,12 @@ namespace _2D_ARPG
             }
             return tiles;
         }
-
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            if(worldMap == 1)
-            {
-                tilesetWorldMap = getTileset();                      // Initializing our tileset
-            }
-
-            if(townValue == 1)
-            {
-                tilesetTown1 = town1Map.getTownTiles(this.Content);  // Initializing our Town1 tileset  
-            }      
-            
+            spriteBatch = new SpriteBatch(GraphicsDevice);                
             WalkAnimation playerAnimation = new WalkAnimation();
             Texture2D playerTexture = Content.Load<Texture2D>("knightwalkanimation");
             Vector2 playerPosition = new Vector2(880, 768);
@@ -124,7 +119,7 @@ namespace _2D_ARPG
             player.Initialize(playerAnimation, playerPosition);
             camera.Scale = 5.0f;
         }
-   
+
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
         protected override void UnloadContent()
@@ -139,6 +134,7 @@ namespace _2D_ARPG
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            
             float seconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
@@ -257,18 +253,21 @@ namespace _2D_ARPG
                     else
                         keyRepeatTime -= elapsedTime;
                 }
-
             }
 
-            if (KeyPressed(Keys.Enter))                    //sets worldmap active
+            if (KeyPressed(Keys.Enter))
             {
-                worldMap = 1;
-                townValue = 0;
             }
             if (KeyPressed(Keys.K))
+            {              
+            }
+            if (player.PlayerPosition.X == 880 && player.PlayerPosition.Y == 752)
             {
-                townValue = 1;
-                worldMap = 0;
+                tilesetWorldMap = tilesetTown1;
+                CurDoc = NexDoc;
+                player.PlayerPosition.X = 448;
+                player.PlayerPosition.Y = 592;
+                CollisionIDs = TownCollisionIDs;
             }
         }
 
@@ -279,24 +278,13 @@ namespace _2D_ARPG
             spriteBatch.Begin(this.camera, SpriteSortMode.Deferred,
             BlendState.AlphaBlend, SamplerState.PointClamp);
             // Draw WorldMap
-            if (worldMap == 1 && townValue <= 0) 
-            {
                 foreach (Tile tile in tilesetWorldMap)
                 {
                     tile.Draw(spriteBatch);
                     // Draw Player
                     player.Draw(spriteBatch);
                 }  
-            }
-             if (townValue == 1 && worldMap <= 0)
-             {
-                 foreach(Tile tile in tilesetTown1)
-                 {
-                     tile.Draw(spriteBatch);
-                    // Draw Player
-                    player.Draw(spriteBatch);
-                }
-             }  
+
             spriteBatch.End();
             base.Draw(gameTime);
         }
