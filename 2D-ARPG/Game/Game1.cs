@@ -48,23 +48,22 @@ namespace _2D_ARPG
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            camera = new Camera(this.GraphicsDevice);               // Initializing our gameCamera
+
             worldMap = new WorldMap();                              // Init worldMap
             tilesetWorldMap = worldMap.getMapTiles(this.Content);   // Getting our worldmap tiles
+            mapCollisionIDs = worldMap.worldMapCollisionIDs;        // Map Collision Ids
 
             town1Map = new Town1_map();                             // Initializing our Town1 Map
             tilesetTown1 = town1Map.getTownTiles(this.Content);     // Getting our town1 tiles
+            TownCollisionIDs = town1Map.townCollisions;             // Town collision Ids
+
+            currentCollisionIDs = mapCollisionIDs;                  // set currentCollisionIDs to mapCollisionIDs as default when game starts
+            currentTileset = tilesetWorldMap;                       // set currentTileset to tilesetWorldMap as default when game starts
 
             player = new Player();                                  // Initializing our player
             player.Attack = 5;                                      // Player Attack value
             player.Life = 10;                                       // Player Life value      
-                       
-            camera = new Camera(this.GraphicsDevice);               // Initializing our gameCamera
-
-            TownCollisionIDs = town1Map.townCollisions;             // Town collision Ids
-            mapCollisionIDs = worldMap.worldMapCollisionIDs;        // Map Collision Ids
-
-            currentCollisionIDs = mapCollisionIDs;                  // set currentCollisionIDs to mapCollisionIDs as default when game starts
-            currentTileset = tilesetWorldMap;                       // set currentTileset to tilesetWorldMap as default when game starts
 
             base.Initialize();
         }
@@ -106,7 +105,6 @@ namespace _2D_ARPG
             this.camera.Update(gameTime);
             this.camera.Position = player.PlayerPosition;
             UpdatePlayer(gameTime);
-            //Debug.WriteLine("Pos: " + player.PlayerPosition);
             base.Update(gameTime);
         }
 
