@@ -8,9 +8,8 @@ using Microsoft.Xna.Framework.Content;
 
 namespace _2D_ARPG
 {
-    public class Town1_map
+    class Town1_map
     {
-        public Tile[,] town1Tiles;
         public int[,] townCollisions = new int[100, 100];
         public Tile[,] getTownTiles(ContentManager Content)
         {

@@ -13,7 +13,6 @@ namespace _2D_ARPG
         public int Attack;
         public bool Active;
         public Vector2 PlayerPosition;
-        // public Texture2D PlayerTexture;
         public WalkAnimation PlayerAnimation;
 
         public int Width
@@ -28,7 +27,6 @@ namespace _2D_ARPG
 
         public void Initialize(WalkAnimation animation, Vector2 position)
         {
-            //PlayerTexture = texture;
             PlayerAnimation = animation;
             PlayerPosition = position;
             Active = true;
@@ -44,7 +42,6 @@ namespace _2D_ARPG
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(PlayerTexture, PlayerPosition, null, null, null, 0f, null, null, SpriteEffects.None, 0f);
             PlayerAnimation.Draw(spriteBatch);
         }
     }

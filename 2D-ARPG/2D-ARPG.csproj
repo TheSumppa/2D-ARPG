@@ -63,6 +63,7 @@
     <Compile Include="Game\Tile.cs" />
     <Compile Include="Game\WalkAnimation.cs" />
     <Compile Include="Game\Town1_map.cs" />
+    <Compile Include="WorldMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Comora, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">

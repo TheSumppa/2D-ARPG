@@ -11,32 +11,32 @@ namespace _2D_ARPG
     /// This is the main type for your game.
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;             // Our GraphicsManager
-        SpriteBatch spriteBatch;                    // Spritebatch we use to draw stuff
-        Player player;                              // Player class
-        Town1_map town1Map;                         // Town1 map
-        KeyboardState currentKeyboardState;         // Current Keyboardstate used in movement
-        KeyboardState previousKeyboardState;        // previous Keyboardstate used in movement
-        Tile[,] tilesetWorldMap;                    // Multidimensional array for worldmap tiles
-        Tile[,] tilesetTown1;                       // Multidimensional array for town1 tiles
-        float playerMoveSpeed = 16;                 // Player movespeed
-        int worldMap = 0;                           // Variable used for drawing worldmap
-        int townValue = 0;                          // Variable used for drawing towns
-        float keyRepeatTime;                        // repeattime used for movement
-        float elapsedTime;                          // Elapsed time used for movement
-        float keyRepeatDelay = 0.25f;               // Repeat rate
-        public SpriteFont font;                     // Sprite font used for text
-        Camera camera;                              // Game camera
-        int[,] CollisionIDs = new int[100, 100];    // ID's used for collision
-        int[,] TownCollisionIDs = new int[100, 100];
-        XDocument CurDoc;
-        XDocument NexDoc;
+        GraphicsDeviceManager graphics;                     // Our GraphicsManager
+        SpriteBatch spriteBatch;                            // Spritebatch we use to draw stuff
+        Camera camera;                                      // Game camera class
+        Player player;                                      // Player class
+        Town1_map town1Map;                                 // Town1 map class
+        WorldMap worldMap;                                  // World map class
+        KeyboardState currentKeyboardState;                 // Current Keyboardstate used in movement
+        KeyboardState previousKeyboardState;                // previous Keyboardstate used in movement
+        Tile[,] tilesetWorldMap;                            // Multidimensional array for worldmap tiles
+        Tile[,] tilesetTown1;                               // Multidimensional array for town1 tiles
+        Tile[,] currentTileset;                             // Multidimensional array for currently used tiles
+        float playerMoveSpeed = 16;                         // Player movespeed
+        float keyRepeatTime;                                // repeattime used for movement
+        float elapsedTime;                                  // Elapsed time used for movement
+        float keyRepeatDelay = 0.25f;                       // Repeat rate
+        public SpriteFont font;                             // Sprite font used for text       
+        int[,] mapCollisionIDs = new int[100, 100];         // ID's used for collision on worldmap
+        int[,] TownCollisionIDs = new int[100, 100];        // ID's used for collision in towns
+        int[,] currentCollisionIDs = new int[100, 100];     // Currently used collision IDs
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
         }
@@ -48,63 +48,27 @@ namespace _2D_ARPG
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            town1Map = new Town1_map();                          // Initializing our Town1 Map class
-            tilesetWorldMap = getTileset();                      // Initializing our worldmap tileset
-            tilesetTown1 = town1Map.getTownTiles(this.Content);  // Initializing our town tileset
-            player = new Player();                               // Initializing our player
-            player.Attack = 5;                                   // Player Attack value
-            player.Life = 10;                                    // Player Life value                 
-            camera = new Camera(this.GraphicsDevice);            // Initializing our gameCamera
-            TownCollisionIDs = town1Map.townCollisions;
+            worldMap = new WorldMap();                              // Init worldMap
+            tilesetWorldMap = worldMap.getMapTiles(this.Content);   // Getting our worldmap tiles
+
+            town1Map = new Town1_map();                             // Initializing our Town1 Map
+            tilesetTown1 = town1Map.getTownTiles(this.Content);     // Getting our town1 tiles
+
+            player = new Player();                                  // Initializing our player
+            player.Attack = 5;                                      // Player Attack value
+            player.Life = 10;                                       // Player Life value      
+                       
+            camera = new Camera(this.GraphicsDevice);               // Initializing our gameCamera
+
+            TownCollisionIDs = town1Map.townCollisions;             // Town collision Ids
+            mapCollisionIDs = worldMap.worldMapCollisionIDs;        // Map Collision Ids
+
+            currentCollisionIDs = mapCollisionIDs;                  // set currentCollisionIDs to mapCollisionIDs as default when game starts
+            currentTileset = tilesetWorldMap;                       // set currentTileset to tilesetWorldMap as default when game starts
+
             base.Initialize();
         }
 
-        // WorldMap data
-        public Tile[,] getTileset()
-        {
-            XDocument mapXDoc = XDocument.Load("Content/WorldMap.tmx");
-            XDocument townxDoc = XDocument.Load("Content/Town_1.tmx");
-            CurDoc = mapXDoc;
-            NexDoc = townxDoc;
-            int MapWidth = int.Parse(CurDoc.Root.Attribute("width").Value);
-            int MapHeight = int.Parse(CurDoc.Root.Attribute("height").Value);
-            int TileCount = int.Parse(CurDoc.Root.Element("tileset").Attribute("tilecount").Value);
-            int Columns = int.Parse(CurDoc.Root.Element("tileset").Attribute("columns").Value);
-            string IdArray = CurDoc.Root.Element("layer").Element("data").Value;
-            string[] splitArray = IdArray.Split(',');
-            int[,] intIDs = new int[MapWidth, MapHeight];
-
-            for (int x = 0; x < MapWidth; x++)
-            {
-                for (int y = 0; y < MapHeight; y++)
-                {
-                    intIDs[x, y] = int.Parse(splitArray[x + y * MapWidth]);
-                    CollisionIDs[x, y] = int.Parse(splitArray[x + y * MapWidth]);
-                }
-            }
-
-            int num = 0;
-            Vector2[] sourcePosition = new Vector2[TileCount];
-            for (int x = 0; x < TileCount / Columns; x++)
-            {
-                for (int y = 0; y < Columns; y++)
-                {
-                    sourcePosition[num] = new Vector2(y * 16, x * 16);
-                    num++;
-                }
-            }
-
-            Texture2D sourceTex = Content.Load<Texture2D>("Tileset");
-            Tile[,] tiles = new Tile[MapWidth, MapHeight];
-            for (int x = 0; x < MapWidth; x++)
-            {
-                for (int y = 0; y < MapHeight; y++)
-                {
-                    tiles[x, y] = new Tile(new Vector2(x * 16, y * 16), sourceTex, new Rectangle((int)sourcePosition[intIDs[x, y] - 1].X, (int)sourcePosition[intIDs[x, y] - 1].Y, 16, 16));
-                }
-            }
-            return tiles;
-        }
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         protected override void LoadContent()
@@ -145,17 +109,11 @@ namespace _2D_ARPG
             //Debug.WriteLine("Pos: " + player.PlayerPosition);
             base.Update(gameTime);
         }
-        
-        // To check if key is pressed
-        bool KeyPressed(Keys key)
-        {
-            return currentKeyboardState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key);
-        }
 
         // Collision check to Up
         public bool isPassableUp(int x, int y)
         {
-            int tileValueUp = CollisionIDs[((int)player.PlayerPosition.X / 16 - 1), (((int)player.PlayerPosition.Y / 16 - 1)) - 1];
+            int tileValueUp = currentCollisionIDs[((int)player.PlayerPosition.X / 16 - 1), (((int)player.PlayerPosition.Y / 16 - 1)) - 1];
             if (tileValueUp == 1 || tileValueUp == 3 || tileValueUp == 5 || tileValueUp == 6 || tileValueUp == 7 || tileValueUp == 8 || tileValueUp == 9
                 || tileValueUp == 10 || tileValueUp == 11 || tileValueUp == 12 || tileValueUp == 14 || tileValueUp == 15 || tileValueUp == 16 || tileValueUp == 17
                 || tileValueUp == 19 || tileValueUp == 21 || tileValueUp == 22 || tileValueUp == 24 || tileValueUp == 28 || tileValueUp == 29 || tileValueUp == 30 || tileValueUp == 31 || tileValueUp == 32
@@ -166,7 +124,7 @@ namespace _2D_ARPG
         // Collision check to Down
         public bool isPassableDown(int x, int y)
         {
-            int tileValueDown = CollisionIDs[((int)player.PlayerPosition.X / 16 - 1), (((int)player.PlayerPosition.Y / 16 - 1)) + 1];
+            int tileValueDown = currentCollisionIDs[((int)player.PlayerPosition.X / 16 - 1), (((int)player.PlayerPosition.Y / 16 - 1)) + 1];
             if (tileValueDown == 1 || tileValueDown == 3 || tileValueDown == 5 || tileValueDown == 6 || tileValueDown == 7 || tileValueDown == 8 || tileValueDown == 9
                 || tileValueDown == 10 || tileValueDown == 11 || tileValueDown == 12 || tileValueDown == 14 || tileValueDown == 15 || tileValueDown == 16 || tileValueDown == 17
                 || tileValueDown == 19 || tileValueDown == 21 || tileValueDown == 22 || tileValueDown == 24 || tileValueDown == 28 || tileValueDown == 29 || tileValueDown == 30 || tileValueDown == 31 || tileValueDown == 32
@@ -177,7 +135,7 @@ namespace _2D_ARPG
         // Collision check to Left
         public bool isPassableLeft(int x, int y)
         {
-            int tileValueLeft = CollisionIDs[(((int)player.PlayerPosition.X / 16 - 1)) - 1, (((int)player.PlayerPosition.Y / 16 - 1))];
+            int tileValueLeft = currentCollisionIDs[(((int)player.PlayerPosition.X / 16 - 1)) - 1, (((int)player.PlayerPosition.Y / 16 - 1))];
             if (tileValueLeft == 1 || tileValueLeft == 3 || tileValueLeft == 5 || tileValueLeft == 6 || tileValueLeft == 7 || tileValueLeft == 8 || tileValueLeft == 9
                 || tileValueLeft == 10 || tileValueLeft == 11 || tileValueLeft == 12 || tileValueLeft == 14 || tileValueLeft == 15 || tileValueLeft == 16 || tileValueLeft == 17
                 || tileValueLeft == 19 || tileValueLeft == 21 || tileValueLeft == 22 || tileValueLeft == 24 || tileValueLeft == 28 || tileValueLeft == 29 || tileValueLeft == 30 || tileValueLeft == 31 || tileValueLeft == 32
@@ -188,13 +146,20 @@ namespace _2D_ARPG
         // Collision check to right
         public bool isPassableRight(int x, int y)
         {
-            int tileValueRight = CollisionIDs[(((int)player.PlayerPosition.X / 16 - 1)) + 1, ((int)player.PlayerPosition.Y / 16 - 1)];
+            int tileValueRight = currentCollisionIDs[(((int)player.PlayerPosition.X / 16 - 1)) + 1, ((int)player.PlayerPosition.Y / 16 - 1)];
             if (tileValueRight == 1 || tileValueRight == 3 || tileValueRight == 5 || tileValueRight == 6 || tileValueRight == 7 || tileValueRight == 8 || tileValueRight == 9
                 || tileValueRight == 10 || tileValueRight == 11 || tileValueRight == 12 || tileValueRight == 14 || tileValueRight == 15 || tileValueRight == 16 || tileValueRight == 17
                 || tileValueRight == 19 || tileValueRight == 21 || tileValueRight == 22 || tileValueRight == 24 || tileValueRight == 28 || tileValueRight == 29 || tileValueRight == 30 || tileValueRight == 31 || tileValueRight == 32
                 || tileValueRight == 33 || tileValueRight == 34 || tileValueRight == 35 || tileValueRight == 36 || tileValueRight == 40)
                 return true;
             return false;
+        }
+
+
+        // To check if key is pressed
+        bool KeyPressed(Keys key)
+        {
+            return currentKeyboardState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key);
         }
 
         // Player movement
@@ -263,11 +228,10 @@ namespace _2D_ARPG
             }
             if (player.PlayerPosition.X == 880 && player.PlayerPosition.Y == 752)
             {
-                tilesetWorldMap = tilesetTown1;
-                CurDoc = NexDoc;
+                currentTileset = tilesetTown1;
                 player.PlayerPosition.X = 448;
                 player.PlayerPosition.Y = 592;
-                CollisionIDs = TownCollisionIDs;
+                currentCollisionIDs = TownCollisionIDs;
             }
         }
 
@@ -278,7 +242,7 @@ namespace _2D_ARPG
             spriteBatch.Begin(this.camera, SpriteSortMode.Deferred,
             BlendState.AlphaBlend, SamplerState.PointClamp);
             // Draw WorldMap
-                foreach (Tile tile in tilesetWorldMap)
+                foreach (Tile tile in currentTileset)
                 {
                     tile.Draw(spriteBatch);
                     // Draw Player
