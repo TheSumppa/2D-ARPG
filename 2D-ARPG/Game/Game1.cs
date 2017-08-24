@@ -101,8 +101,8 @@ namespace _2D_ARPG
             elapsedTime = seconds;
             this.camera.Update(gameTime);
             this.camera.Position = player.PlayerPosition;
-            UpdatePlayer(gameTime);
             checkTileValue();
+            UpdatePlayer(gameTime);
             Debug.WriteLine("PosX: " + player.PlayerPosition.X);
             Debug.WriteLine("PosY: " + player.PlayerPosition.Y);
             Debug.WriteLine("Tilevalue: " + currentTileValue);
@@ -225,15 +225,15 @@ namespace _2D_ARPG
                 }
             }
 
-            if (currentTileValue == 15)
+            if (currentTileValue == 15)                     // Check if player want's to enter a town1 and set correct tileSet, collisionIDS and player position
             {
                 currentTileset = tilesetTown1;
                 currentCollisionIDs = TownCollisionIDs;
-                player.PlayerPosition.X = 560;
+                player.PlayerPosition.X = 592;
                 player.PlayerPosition.Y = 720;
                              
             }
-            if(currentTileValue == 39)
+            if(currentTileValue == 39)                      // Check if player want's to leave a town1 and set correct tileSet, collisionIDS and player positionv
             {
                 currentTileset = tilesetWorldMap;
                 currentCollisionIDs = mapCollisionIDs;
