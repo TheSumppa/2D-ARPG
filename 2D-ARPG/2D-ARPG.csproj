@@ -59,7 +59,7 @@
     <Compile Include="Game\Game1.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Program.cs" />
-    <Compile Include="Mine_map.cs" />
+    <Compile Include="Game\Mine_map.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game\Tile.cs" />
     <Compile Include="Game\WalkAnimation.cs" />
