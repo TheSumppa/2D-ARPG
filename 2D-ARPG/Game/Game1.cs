@@ -14,7 +14,7 @@ namespace _2D_ARPG
         Player player;                                      // Player class
         Town1_map town1Map;                                 // Town1 map class
         WorldMap worldMap;                                  // World map class
-        Mine_map mineMap;
+        Mine_map mineMap;                                   // Mine map class
         KeyboardState currentKeyboardState;                 // Current Keyboardstate used in movement
         KeyboardState previousKeyboardState;                // previous Keyboardstate used in movement
         Tile[,] tilesetWorldMap;                            // Multidimensional array for worldmap tiles
@@ -179,6 +179,7 @@ namespace _2D_ARPG
         {
             player.Update(gameTime);
             {
+                // Move left
                 if (currentKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.S)
                 && currentKeyboardState.IsKeyUp(Keys.D))
                 {
@@ -191,7 +192,7 @@ namespace _2D_ARPG
                     else
                         keyRepeatTime -= elapsedTime;
                 }
-
+                // Move Right
                 if (currentKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.S) && currentKeyboardState.IsKeyUp(Keys.W)
                 && currentKeyboardState.IsKeyUp(Keys.A))
                 {
@@ -204,7 +205,7 @@ namespace _2D_ARPG
                     else
                         keyRepeatTime -= elapsedTime;
                 }
-
+                // Move Up
                 if (currentKeyboardState.IsKeyDown(Keys.W) && currentKeyboardState.IsKeyUp(Keys.A) && currentKeyboardState.IsKeyUp(Keys.S)
                                    && currentKeyboardState.IsKeyUp(Keys.D))
                 {
@@ -217,7 +218,7 @@ namespace _2D_ARPG
                     else
                         keyRepeatTime -= elapsedTime;
                 }
-
+                // Move Down
                 if (currentKeyboardState.IsKeyDown(Keys.S) && currentKeyboardState.IsKeyUp(Keys.W) && currentKeyboardState.IsKeyUp(Keys.A)
                 && currentKeyboardState.IsKeyUp(Keys.D))
                 {
@@ -268,6 +269,7 @@ namespace _2D_ARPG
             {
                 tile.Draw(spriteBatch);
             }
+            // Draw Player
             player.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
